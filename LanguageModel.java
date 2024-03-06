@@ -54,15 +54,19 @@ public class LanguageModel {
         }
 	}
 
+    private int numberOfElementsInList(List probs){
+        int num_of_elements = 0;
+        for (int i = 0; i < probs.getSize(); i++) {
+            num_of_elements += probs.listIterator(i).current.cp.count;
+        }
+        return num_of_elements;
+    }
+
     // Computes and sets the probabilities (p and cp fields) of all the
 	// characters in the given list. */
 	public void calculateProbabilities(List probs) {
-        int list_size = probs.getSize();
-        int num_of_elements = 0;
-        for (int i = 0; i < list_size; i++) {
-            num_of_elements += probs.listIterator(i).current.cp.count;
-        }
-        for (int i = 0; i < list_size; i++) {
+        int num_of_elements = this.numberOfElementsInList(probs);
+        for (int i = 0; i < probs.getSize(); i++) {
             CharData cd = probs.get(i);
             double probability = (double) cd.count / num_of_elements;
             cd.p = probability;
@@ -78,8 +82,8 @@ public class LanguageModel {
     // Returns a random character from the given probabilities list.
 	public char getRandomChar(List probs) {
         char result = ' ';
-		double random_num = Math.random();
-        int num_of_elements = probs.getSize();
+		double random_num = randomGenerator.nextDouble();
+        int num_of_elements = this.numberOfElementsInList(probs);
         for (int i = 0; i < num_of_elements; i++) {
             CharData cd = probs.get(i);
             if (cd.cp > random_num) {
